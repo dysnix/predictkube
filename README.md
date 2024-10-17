@@ -37,7 +37,7 @@ The project is organized as follows:
 - [protoc-gen-go-grpc](https://grpc.io/docs/protoc-installation/)
 
 We use `.tool-versions` file to specify the versions of tools to use.
-You can use either [mise-en-place](https://github.com/cosmtrek/mise-en-place)
+You can use either [mise-en-place](https://mise.jdx.dev)
 or [asdf](https://asdf-vm.com/) to install the correct versions of tools.
 
 ### Generating Go Code
