@@ -6,18 +6,20 @@ GOPATH=$(shell go env GOPATH)
 SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
 
-FILES=./external/proto/**/*.pb.go
+INJECT_TAG=github.com/favadi/protoc-go-inject-tag
+
+.PHONY: gen-proto add-tags
 
 gen-proto:
 	protoc -I. \
-      -I/usr/local/include \
-      -I${GOPATH}/src/ \
-      --go_out=plugins=grpc:../../../ \
-      ./proto/**/*.proto
+		-I/usr/local/include \
+		--go_out=external \
+		--go_opt=paths=source_relative \
+		--go-grpc_out=external \
+		--go-grpc_opt=paths=source_relative \
+		proto/**/*.proto
 
-FILES = ./external/proto
-add-tags: $(FILES)/**/*.pb.go
-	@printf "Processing proto files...\n"
-	for file in $^ ; do \
-		protoc-go-inject-tag -input="$${file}"; \
-	done
+add-tags: gen-proto
+	@echo "Processing proto files..."
+	go get $(INJECT_TAG)
+	go run $(INJECT_TAG) -input=$$(find external -name "*.pb.go")
